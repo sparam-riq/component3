@@ -1,6 +1,6 @@
 apiVersion: automation.cloudbees.io/v1alpha1
 kind: workflow
-name: My automation
+name: My automation Component3
 on:
   push:
     branches:
@@ -24,12 +24,11 @@ jobs:
       - name: DockerBuild
         uses: cloudbees-io/kaniko@v1
         with:
-          destination: 641518622681.dkr.ecr.us-west-2.amazonaws.com/demo_component1:${{ cloudbees.scm.sha }}
-      - name: Deploy Using CBCI
-        uses: cloudbees-io/cbci-run-job
+          destination: 641518622681.dkr.ecr.us-west-2.amazonaws.com/demo_component3:${{ cloudbees.scm.sha }}
+      - name: Trigger Spinnaker job using Cloudbees Spinnaker Action
+        uses: cloudbees-io/spinnaker-run-pipeline@v1.0.0
         with:
-          url: https://releaseiq.ironman.releaseiq.io/
-          username: ${{ secrets.CBCI_IRONMAN_USERNAME }}
-          password: ${{ secrets.CBCI_IRONMAN_PASSWORD }}
-          job-name: deploy_component1
-          parameters: '{"TAG_NAME":"${{ cloudbees.scm.sha }}"}'
+          url: http://ec2-35-88-126-158.us-west-2.compute.amazonaws.com:8084
+          token: ${{ secrets.SPINNAKER_TOKEN }}
+          app-name: application001
+          pipeline-name: pipeline002
