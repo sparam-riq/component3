@@ -1,0 +1,35 @@
+apiVersion: automation.cloudbees.io/v1alpha1
+kind: workflow
+name: My automation
+on:
+  push:
+    branches:
+      - "**"
+jobs:
+  build:
+    steps:
+      - name: Checkout
+        uses: cloudbees-io/checkout@v1.0.2
+      - name: Maven Build
+        uses: docker://maven:3.8.7-openjdk-18-slim
+        run: |
+          mvn clean install
+          ls -lrt target/
+      - name: ConfigureAWSCredentials
+        uses: cloudbees-io/configure-aws-credentials@v0.0.4
+        with:
+          aws-access-key-id: ${{ secrets.RIQ_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.RIQ_SECRET_KEY }}
+          aws-region: us-west-2
+      - name: DockerBuild
+        uses: cloudbees-io/kaniko@v1
+        with:
+          destination: 641518622681.dkr.ecr.us-west-2.amazonaws.com/demo_component1:${{ cloudbees.scm.sha }}
+      - name: Deploy Using CBCI
+        uses: cloudbees-io/cbci-run-job
+        with:
+          url: https://releaseiq.ironman.releaseiq.io/
+          username: ${{ secrets.CBCI_IRONMAN_USERNAME }}
+          password: ${{ secrets.CBCI_IRONMAN_PASSWORD }}
+          job-name: deploy_component1
+          parameters: '{"TAG_NAME":"${{ cloudbees.scm.sha }}"}'
