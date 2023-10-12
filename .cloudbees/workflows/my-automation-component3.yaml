@@ -57,3 +57,5 @@ jobs:
           token: ${{ secrets.SPINNAKER_TOKEN }}
           app-name: application001
           pipeline-name: pipeline002
+
+
