@@ -49,13 +49,14 @@ jobs:
       #     image-location: 641518622681.dkr.ecr.us-west-2.amazonaws.com/demo_component3
       #     image-tag: ${{ cloudbees.scm.sha }}
 
-      - name: Trigger Spinnaker job using Cloudbees Spinnaker Action
-        uses: cloudbees-io/spinnaker-run-pipeline@v1.0.0
-        kind: deploy
+      - name: Deploy using Octopus
+        shell: sh
+        uses: cloudbees-io/octopus-run-project
         with:
-          url: http://ec2-35-88-126-158.us-west-2.compute.amazonaws.com:8084
-          token: ${{ secrets.SPINNAKER_TOKEN }}
-          app-name: application001
-          pipeline-name: pipeline002
+          release: 0.0.2
+          space-name: Default
+          token: ${{ secrets.OCTOPUS_TOKEN }}
+          url: ${{ vars.OCTOPUS_URL }}
+          environment-name: Stage
 
 
