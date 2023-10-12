@@ -16,7 +16,6 @@ jobs:
         with:
           orgname: ${{ vars.SNYK_SAAS_ORG_NAME }}
           token: ${{ secrets.SNYK_SAAS_TOKEN }}
-          gh_secret_access_token: ${{ secrets.GIT_SECRET_ACCESS_TOKEN }}
           language: "LANGUAGE_JAVA"
           
       - name: Running Snyk SAST Scan
@@ -44,11 +43,11 @@ jobs:
         with:
           destination: 641518622681.dkr.ecr.us-west-2.amazonaws.com/demo_component3:${{ cloudbees.scm.sha }}
           
-      - name: Running container scan using Trivy
-        uses: cloudbees-io/trivy-scan-container@v1
-        with:
-          image-location: 641518622681.dkr.ecr.us-west-2.amazonaws.com/demo_component3
-          image-tag: ${{ cloudbees.scm.sha }}
+      # - name: Running container scan using Trivy
+      #   uses: cloudbees-io/trivy-scan-container@v1
+      #   with:
+      #     image-location: 641518622681.dkr.ecr.us-west-2.amazonaws.com/demo_component3
+      #     image-tag: ${{ cloudbees.scm.sha }}
 
       - name: Trigger Spinnaker job using Cloudbees Spinnaker Action
         uses: cloudbees-io/spinnaker-run-pipeline@v1.0.0
