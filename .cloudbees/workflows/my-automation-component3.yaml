@@ -14,7 +14,7 @@ jobs:
       - name: Running Snyk SCA scan
         uses: cloudbees-io/snyk-sca-scan-dependency@v1
         with:
-          orgname: ${{ secrets.SNYK_SAST_ORG_NAME }}
+          orgname: ${{ vars.SNYK_SAAS_ORG_NAME }}
           token: ${{ secrets.SNYK_SAAS_TOKEN }}
           gh_secret_access_token: ${{ secrets.GIT_SECRET_ACCESS_TOKEN }}
           language: "LANGUAGE_JAVA"
@@ -22,7 +22,7 @@ jobs:
       - name: Running Snyk SAST Scan
         uses: cloudbees-io/snyk-sast-scan-code@v1
         with:
-          orgname: ${{ secrets.SNYK_SAST_ORG_NAME }}
+          orgname: ${{ vars.SNYK_SAAS_ORG_NAME }}
           token: ${{ secrets.SNYK_SAAS_TOKEN }}
           language: "LANGUAGE_JAVA"
           
@@ -31,6 +31,7 @@ jobs:
         run: |
           mvn clean install
           ls -lrt target/
+          
       - name: ConfigureAWSCredentials
         uses: cloudbees-io/configure-aws-credentials@v0.0.4
         with:
@@ -39,10 +40,19 @@ jobs:
           aws-region: us-west-2
       - name: DockerBuild
         uses: cloudbees-io/kaniko@v1
+        kind: build
         with:
           destination: 641518622681.dkr.ecr.us-west-2.amazonaws.com/demo_component3:${{ cloudbees.scm.sha }}
+          
+      - name: Running container scan using Trivy
+        uses: cloudbees-io/trivy-scan-container@v1
+        with:
+          image-location: 641518622681.dkr.ecr.us-west-2.amazonaws.com/demo_component3
+          image-tag: ${{ cloudbees.scm.sha }}
+
       - name: Trigger Spinnaker job using Cloudbees Spinnaker Action
         uses: cloudbees-io/spinnaker-run-pipeline@v1.0.0
+        kind: deploy
         with:
           url: http://ec2-35-88-126-158.us-west-2.compute.amazonaws.com:8084
           token: ${{ secrets.SPINNAKER_TOKEN }}
