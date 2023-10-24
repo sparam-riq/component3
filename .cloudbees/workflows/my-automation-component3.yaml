@@ -7,6 +7,7 @@ on:
       - "**"
 jobs:
   build:
+    environment: stage
     steps:
       - name: Checkout
         uses: cloudbees-io/checkout@v1.0.2
@@ -52,6 +53,7 @@ jobs:
       - name: Deploy using Octopus
         shell: sh
         uses: cloudbees-io/octopus-run-project
+        kind: deploy
         with:
           release: 0.0.2
           space-name: Default
