@@ -32,17 +32,17 @@ jobs:
           mvn clean install
           ls -lrt target/
           
-      - name: ConfigureAWSCredentials
-        uses: cloudbees-io/configure-aws-credentials@v0.0.4
-        with:
-          aws-access-key-id: ${{ secrets.RIQ_ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.RIQ_SECRET_KEY }}
-          aws-region: us-west-2
-      - name: DockerBuild
-        uses: cloudbees-io/kaniko@v1
-        kind: build
-        with:
-          destination: 641518622681.dkr.ecr.us-west-2.amazonaws.com/demo_component3:${{ cloudbees.scm.sha }}
+      # - name: ConfigureAWSCredentials
+      #   uses: cloudbees-io/configure-aws-credentials@v0.0.4
+      #   with:
+      #     aws-access-key-id: ${{ secrets.RIQ_ACCESS_KEY }}
+      #     aws-secret-access-key: ${{ secrets.RIQ_SECRET_KEY }}
+      #     aws-region: us-west-2
+      # - name: DockerBuild
+      #   uses: cloudbees-io/kaniko@v1
+      #   kind: build
+      #   with:
+      #     destination: 641518622681.dkr.ecr.us-west-2.amazonaws.com/demo_component3:${{ cloudbees.scm.sha }}
           
       # - name: Running container scan using Trivy 
       #   uses: cloudbees-io/trivy-scan-container@v1 
@@ -50,15 +50,15 @@ jobs:
       #     image-location: 641518622681.dkr.ecr.us-west-2.amazonaws.com/demo_component3
       #     image-tag: ${{ cloudbees.scm.sha }}
 
-      - name: Deploy using Octopus
-        shell: sh
-        uses: cloudbees-io/octopus-run-project
-        kind: deploy
-        with:
-          release: 0.0.2
-          space-name: Default
-          token: ${{ secrets.OCTOPUS_TOKEN }}
-          url: ${{ vars.OCTOPUS_URL }}
-          environment-name: Stage
+      # - name: Deploy using Octopus
+      #   shell: sh
+      #   uses: cloudbees-io/octopus-run-project
+      #   kind: deploy
+      #   with:
+      #     release: 0.0.2
+      #     space-name: Default
+      #     token: ${{ secrets.OCTOPUS_TOKEN }}
+      #     url: ${{ vars.OCTOPUS_URL }}
+      #     environment-name: Stage
 
 
