@@ -46,7 +46,7 @@ jobs:
           
       - name: Deploy using Octopus
         shell: sh
-        uses: cloudbees-io/octopus-run-project@v1
+        uses: cloudbees-io/octopus-run-project@v2
         kind: deploy
         with:
           release: 0.0.2
