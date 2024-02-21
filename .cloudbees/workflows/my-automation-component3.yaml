@@ -10,7 +10,7 @@ jobs:
     environment: stage
     steps:
       - name: Checkout
-        uses: cloudbees-io/checkout@v1.0.2
+        uses: cloudbees-io/checkout@v1
 
       - name: Running Snyk SCA scan
         uses: cloudbees-io/snyk-sca-scan-dependency@v1
@@ -33,7 +33,7 @@ jobs:
           ls -lrt target/
           
       - name: ConfigureAWSCredentials
-        uses: cloudbees-io/configure-aws-credentials@v0.0.4
+        uses: cloudbees-io/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.RIQ_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.RIQ_SECRET_KEY }}
